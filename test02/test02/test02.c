@@ -4,7 +4,7 @@ int test01();
 void test02(int a);
 void test03();
 void Dump(char* p, int len);
-void copy(char* p1, char* p2);
+void Copy(char* p1, char* p2);
 
 int main(void)
 {
@@ -101,12 +101,13 @@ void test03()
 	pbuf = buf + addr;
 	printf("문자열을 입력하세요 : ");
 	scanf("%s", kbuf);
-	strcpy(pbuf, kbuf); // 문자열 복사
+	Copy(pbuf, kbuf);
+	//strcpy(pbuf, kbuf); // 문자열 복사
 	Dump(buf, 100);
 
 }
 
-void copy(char* p1, char* p2)
+void Copy(char* p1, char* p2)
 {
 	while (*p2) *p1++ = *p2++; *p1 = 0; //p1에 현재 p2값을 복사해서 넣어라 null아 나올때까지 복사 ex p1이 he
 }
