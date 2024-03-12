@@ -2,23 +2,27 @@
 #include <conio.h>
 int test01();
 void test02(int a);
+void test03();
+void Dump(char* p, int len);
+void copy(char* p1, char* p2);
+
 int main(void)
 {
 	//test01();
-	test02(1);
-
+	//test02(1);
+	test03();
 }
 int test01()
 {
-	char* str[] = {"Zero","One","Two","Three","Four","Five","Six",
-		"Seven","Eight","Nine"}; // ë¬¸ìì—´ í¬ì¸í„° ë°°ì—´
-	printf("ìˆ«ì í‚¤ë¥¼ ì…ë ¥í•˜ì„¸ìš”. í•´ë‹¹í•˜ëŠ” ì˜ë‹¨ì–´ë¥¼ ì•Œë ¤ë“œë¦¬ê² ìŠµë‹ˆë‹¤.\n");
-	printf("í”„ë¡œê·¸ë¨ì„ ëë‚´ê¸°ë ¤ë©´ 'Q'í‚¤ë¥¼ ì…ë ¥í•˜ì„¸ìš”. \n");
+	char* str[] = { "Zero","One","Two","Three","Four","Five","Six",
+		"Seven","Eight","Nine" }; // ¹®ÀÚ¿­ Æ÷ÀÎÅÍ ¹è¿­
+	printf("¼ıÀÚ Å°¸¦ ÀÔ·ÂÇÏ¼¼¿ä. ÇØ´çÇÏ´Â ¿µ´Ü¾î¸¦ ¾Ë·Áµå¸®°Ú½À´Ï´Ù.\n");
+	printf("ÇÁ·Î±×·¥À» ³¡³»±â·Á¸é 'Q'Å°¸¦ ÀÔ·ÂÇÏ¼¼¿ä. \n");
 	int n = 1;
 	while (n)
 	{
 		printf(">");
-		char c = getch();// no echo : í‚¤ê°’ì„ ì¶œë ¥í•˜ì§€ ì•Šê³  ë°˜í™˜
+		char c = getch();// no echo : Å°°ªÀ» Ãâ·ÂÇÏÁö ¾Ê°í ¹İÈ¯
 		/*switch (c)
 		{
 		case'1':
@@ -55,20 +59,64 @@ int test01()
 		case 'Q': n = 0; break;
 		}*/
 		//int m = c - 0x30;//ASCII --> num
-		printf("%c : %s\n", c, str[c - 0x30]);//mëŒ€ì‹  c - 0x30ëŒ€ì… ê°€ëŠ¥
+		printf("%c : %s\n", c, str[c - 0x30]);//m´ë½Å c - 0x30´ëÀÔ °¡´É
 	}
 }
-void test02(int a) // ë¬¸ìì—´ê³¼ ë¬¸ìë°°ì—´
+void test02(int a) // ¹®ÀÚ¿­°ú ¹®ÀÚ¹è¿­
 {
 	char ca[] = "Hello"; // ca[0] : 'H' ... ca[4]:'o' ca[5] : \0
-	for (int i = 0; i < 10; i++) // 0 ~ 5
+	for (int i = 0; i < 6; i++) // 0 ~ 5
 	{
-		printf("ca[%d] : %c (%02x)\n", i, ca[i], ca[i]);
+		printf("ca[%d] : %c (%02x) [%08x]\n", i, ca[i], ca[i], ca + i);
 	}
-	ca[2] -= 1;
+	int ia[] = { 10,20,30,40,50 };
+	for (int i = 0; i < 6; i++) // 0 ~ 5
+	{
+		printf("ia[%d] : %d (%08x) [%08x]\n", i, ia[i], ia[i], ia + i);
+	}
+	int ia2[2][3] = { 10,20,30,40,50,60 };
+	for (int y = 0; y < 2; y++)
+	{
+		for (int x = 0; x < 3; x++)
+			printf("ia2[%d][%d] : %d [%08x]\n", y, x, ia2[y][x], ia2 + y);
+	}
+	/*ca[2] -= 1;
 	ca[3] -= 1;
 	for (int i = 0; i < 10; i++) // 0 ~ 5
 	{
 		printf("ca[%d] : %c (%02x)\n", i, ca[i], ca[i]);
+	}*/
+
+}
+
+void test03()
+{
+	char buf[100];  // ¾ÈÀü ¸Ş¸ğ¸® °ø°£ È®º¸
+	char* pbuf;     // ¾ÈÀü ¸Ş¸ğ¸® °ø°£ÁßÀÇ Ãâ·Â À§Ä¡
+	unsigned int addr;       // Ãâ·Â À§Ä¡ ÁöÁ¤À» À§ÇÑ ÀÔ·Âº¯¼ö(ÁÖ¼Ò)
+	char kbuf[100]; // Ãâ·Â ¹®ÀÚ¿­ ÀÔ·Â °ø°£
+	printf("¾ÈÀü°ø°£ÀÇ ÁÖ¼Ò´Â %d(%08x) ÀÔ´Ï´Ù.\n", (unsigned int)buf, buf);
+	printf("ÀÔ·ÂÀ» ½ÃÀÛÇÒ ÁÖ¼Ò¸¦ ÀÔ·ÂÇÏ¼¼¿ä : ");
+	scanf("%d", &addr);  // ¾ÈÀü°ø°£ ÁÖ¼Ò Âü°í
+	pbuf = buf + addr;
+	printf("¹®ÀÚ¿­À» ÀÔ·ÂÇÏ¼¼¿ä : ");
+	scanf("%s", kbuf);
+	strcpy(pbuf, kbuf); // ¹®ÀÚ¿­ º¹»ç
+	Dump(buf, 100);
+
+}
+
+void copy(char* p1, char* p2)
+{
+	while (*p2) *p1++ = *p2++; *p1 = 0; //p1¿¡ ÇöÀç p2°ªÀ» º¹»çÇØ¼­ ³Ö¾î¶ó null¾Æ ³ª¿Ã¶§±îÁö º¹»ç ex p1ÀÌ he
+}
+
+void Dump(char* p, int len) // ¸Ş¸ğ¸® °ø°£ Ãâ·Â¿ë ¹ü¿ë ÇÔ¼ö
+{
+	for (int i = 0; i < len; i++)  // ¾ÈÀü°ø°£ ¸Ş¸ğ¸® ´ıÇÁ(ÁÖ¼Ò ³ª¿À°í 8ÀÚ¸® ¶ç°í 8ÀÚ¸®(ÃÑ 16ÀÚ¸®) ´ÙÀ½ÁÙ ¹İº¹) ex 1000(ÁÖ¼Ò) 01100108 0909060F ´ÙÀ½ÁÙ 1010 ~ Áï 16ÀÇ ¹è¼ö¸¶´Ù ÁÙ¹Ù²Ş
+	{
+		if (i % 16 == 0) printf("\n%08x ", p);
+		if (i % 8 == 0) printf("  ");
+		printf("%02x ", (unsigned char)*p++);
 	}
 }
