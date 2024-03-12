@@ -8,7 +8,6 @@ int main(void)
 	test02(1);
 
 }
-//수정수정
 int test01()
 {
 	char* str[] = {"Zero","One","Two","Three","Four","Five","Six",
