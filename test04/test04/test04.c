@@ -14,7 +14,7 @@ void sin_(int i, int x, double si);
 
 int main(void)
 {
-	int n;//
+	int n;
 	void* pF[] = { test00,test01,test02,test03,test04,test05,test06,test07 }; // void포인터란 타입이 정해지지않은 포인터 (이 자체로 쓸수는 없음), 사용되기전에 선언적으로 쓸수는 있음, 함수의 주소를 전부 array에 담음
 	void (*pFunc)(); // 함수의 포인터 선언
 	while (1)
