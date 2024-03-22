@@ -1,7 +1,10 @@
 # incheonharman2024-
 인천 하만과정 2024년 3월
 
-오늘 배운 내용 : 2024. 03. 22
+#오늘 배운 내용 : 2024. 03. 22
+
+
+```
 #define  F_CPU 16000000L
 #include <avr/io.h>
 #include <avr/delay.h>
@@ -119,3 +122,4 @@ int main(void)
 
     }
 }
+```
