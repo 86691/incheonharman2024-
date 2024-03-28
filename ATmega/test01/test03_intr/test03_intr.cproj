@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>7.0</ProjectVersion>
     <ToolchainName>com.Atmel.AVRGCC8.C</ToolchainName>
-    <ProjectGuid>{bff3103d-0a52-46e5-8049-3937ed159b33}</ProjectGuid>
+    <ProjectGuid>{c896f9e6-eefd-4c1d-89c2-e488a9330450}</ProjectGuid>
     <avrdevice>ATmega128</avrdevice>
     <avrdeviceseries>none</avrdeviceseries>
     <OutputType>Executable</OutputType>
@@ -12,9 +12,9 @@
     <OutputFileName>$(MSBuildProjectName)</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
-    <AssemblyName>test02_7seg</AssemblyName>
-    <Name>test02_7seg</Name>
-    <RootNamespace>test02_7seg</RootNamespace>
+    <AssemblyName>test03_intr</AssemblyName>
+    <Name>test03_intr</Name>
+    <RootNamespace>test03_intr</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
@@ -139,7 +139,10 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="main-seg.c">
+    <Compile Include="segment.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="main-intr.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

@@ -38,9 +38,9 @@ char arr[5]; // 세그먼트 이미지 정보를 담은 안전 영역
 
 void seg(int sel, uint8_t c)
 {
-	PORTD |= 0x0F;
-	PORTD &= ~(1 <<(3-sel));
-	PORTE = c; // 숫자 데이터 출력
+	PORTF |= 0x0F;
+	PORTF &= ~(1 <<(3-sel));
+	PORTD = c; // 숫자 데이터 출력
 	_delay_ms(1); // 0.01초 간격으로 전환
 }
 
@@ -88,8 +88,8 @@ int main(void)
 	//int count = 0;
 	//int d[4];
 	DDRB &= ~0x01;
-	DDRE = 0xFF; // 세그먼트 
-	DDRD = 0x0F; // 자릿수 선택 핀 4개를 출력으로 설정
+	DDRD = 0xFF; // 세그먼트 
+	DDRF = 0x0F; // 자릿수 선택 핀 4개를 출력으로 설정
 	
     while (1) 
     {
@@ -154,8 +154,8 @@ int main(void)
 		switch (mode)
 		{
 		case 0:
-		PORTD &= ~ 0x0F;
-		PORTE = 0x40;
+		PORTF &= ~ 0x0F;
+		PORTD = 0x40;
 		break;
 		
 		case 1:
