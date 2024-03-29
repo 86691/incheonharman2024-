@@ -221,7 +221,7 @@ ISR(TIMER1_OVF_vect)
  138:	af 93       	push	r26
  13a:	bf 93       	push	r27
 	tcnt++;
-	//if(tcnt >= 500)
+	//if(tcnt >= 500) // 8bit timer 사용시 
 	{
 		cnt++; tcnt = 0;
  13c:	80 91 1c 01 	lds	r24, 0x011C	; 0x80011c <cnt>

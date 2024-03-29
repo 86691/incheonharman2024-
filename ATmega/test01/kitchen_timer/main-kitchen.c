@@ -1,33 +1,21 @@
 /*
- * test03_intr.c
+ * kitchen_timer.c
  *
- * Created: 2024-03-27 오후 12:25:38
+ * Created: 2024-03-28 오후 4:49:27
  * Author : SYSTEM-00
  */ 
-
-//#include "myHeader.h"
-#define  F_CPU 16000000L
-
+#include "myHeader.h"
 #include <avr/io.h>
 #include <avr/delay.h>
 #include <avr/interrupt.h>
 
-#define __delay_t  500
 #define OPMODEMAX     3
-#define STATE_MAX     3
+#define STATE_MAX1     2
+#define STATE_MAX2     4
+#define mode_MAX     4
 
-extern char* Disp(unsigned long num); 
-
-volatile int opmode = 0, state = 0; // 최적화 금지
-
-void TogglePinA(int n, double dl) //  n: n번째 비트, dl : delay in mili-second
-{
-	char b = 1 << n;
-	PORTA |= b; // PORTA의 0번째 비트를 high로 출력
-	_delay_ms(__delay_t);
-	PORTA &= ~b; // PORTA의 0번째 비트를 low로 출력
-	_delay_ms(__delay_t);
-}
+unsigned long cnt = 0;
+volatile int opmode = 0, state = 0, mode = 0; // 최적화 금지
 
 int main(void)
 {
@@ -40,39 +28,52 @@ int main(void)
 	DDRA |= 0x07;
 	DDRD = 0xFF; // 세그먼트
 	DDRF = 0x0F; // 자릿수 선택 핀 4개를 출력으로 설정
+	SegPort(&PORTD, &PORTF);
 	
+	TIMSK |= 0x04; // 0000 0100b - Timer 1 TCNT overflow interrupt (16bit)
+	TCCR1B = 0x04;  // 분주비 (Pre-Scaler) 64
 	// 인터럽트 설정
 	EIMSK = 0x70; // 0111 0000b
 	EICRB = 0x2A; // 0010 1010b
 	SREG |= 0x80; // status Register - 인터럽트 허용
 	sei();        // set interrupt - 인터럽트 시작
 	
-	int t = 0,t2 = 0;
+	int t = 0;
 
 	while (1) 
     {
 		switch(opmode)
 		{
-			
 			case 0: // reset & wait
 				t = 0; break;
 			case 1: // counter start
-				t++;
+				if(mode == 2)
+				{
+					cnt+=30;
+					opmode -=1;
+				}
+				else
+				{
+					t = cnt;
+				}
+				if(t == 90)
+				{
+					opmode+=2;
+				}
 				break;
 			case 2: // count stop
 				break;
-			case 3: // counter start
-				if(t > 0) t--;
-				if(t == 0) opmode += 2;
+			case 3:
+				TogglePinA(2,__delay_t);
+				t++;
+				opmode -= 2;
 				break;
-			case 4: // count stop
-				break;
-			case 5:
-				TogglePinA(1,__delay_t);
 			default: break;
 		}
-		Disp(t);
-
+		mode_type();
+		kitchen_timer(t);
+		SegDisp(cnt);
+		
     }
 }
 ISR(INT4_vect) //INT4 인터럽트 처리 루틴 : sw1
@@ -82,13 +83,29 @@ ISR(INT4_vect) //INT4 인터럽트 처리 루틴 : sw1
 }
 ISR(INT5_vect) //INT5 인터럽트 처리 루틴 : sw2
 {
-	state++;
-	if(state >= STATE_MAX) state = 0;
-	opmode = state+2;
+	if(mode == 2)
+	{
+		state++;
+		if(state > STATE_MAX1) state = 1;
+	}
+	if(mode == 4)
+	{
+		state++;
+		if(state > STATE_MAX2) state = 3;
+	}
 }
 ISR(INT6_vect) //INT6 인터럽트 처리 루틴 : sw3
 {
-	opmode = 0; state = 0;
+	mode++;
+	if(mode > mode_MAX) 
+	{
+		opmode = 0; state = 0;
+		mode = 0;
+	}
 }
 
-
+ISR(TIMER1_OVF_vect)
+{
+	if(state == 0 && opmode == 1) cnt++;
+	if(state == 3 && cnt > 0) cnt--;
+}

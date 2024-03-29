@@ -5,8 +5,8 @@
  *  Author: SYSTEM-00
  */ 
 //가급적 분리된 파일내에 상수를 넣지마라(PORT)
-//#include "myHeader.h"
-#define  F_CPU 16000000L
+#include "myHeader.h"
+//#define  F_CPU 16000000L
 
 #include <avr/io.h>
 #include <avr/delay.h>
@@ -41,16 +41,16 @@ char* SegDisp(unsigned long num) // 10진 정수 ==> 16진수 문자열 : 56506 
 //          ==> 4digit 16진수 segement Image 배열
 // int가 2byte여서 0x8000이 되면 범위를 넘어가서 unsigned long을 사용해야함
 {
-	num %= 65536;
-	int n1 = num % 0x10;               // A (10) : 문자가 아닌 숫자
-	int n2 = (num / 0x10) %16;         // B (11)
-	int n3 = (num / 0x100) %16;         // C (12)
-	int n4 = (num / 0x1000);           // D (13)
+	num %= 3600;
+	int n1 = num % 10;               // A (10) : 문자가 아닌 숫자
+	int n2 = (num / 10) %6;         // B (11)
+	int n3 = (num / 60) %10;         // C (12)
+	int n4 = (num / 600);           // D (13)
 	arr[0] = digit[n1]; // char : 8bit
 	arr[1] = digit[n2];
 	arr[2] = digit[n3];
 	arr[3] = digit[n4];
-	sm = (num > 4095) ? 4 : (num > 255) ? 3 : (num > 15) ? 2 : 1;
+	sm = (num > 599) ? 4 : (num > 59) ? 3 : (num > 9) ? 2 : 1;
 	FND_4(arr);
 	return arr;
 }
